@@ -1,0 +1,87 @@
+<script type="importmap">
+  {
+    "imports": {
+      "@google/genai": "https://esm.sh/@google/genai@^1.4.0",
+      "@ffmpeg/ffmpeg": "https://esm.sh/@ffmpeg/ffmpeg@^0.12.10",
+      "@ffmpeg/util": "https://esm.sh/@ffmpeg/util@^0.12.1"
+    }
+  }
+</script>
+
+<div class="api-key-section">
+  <h1>వియో - వీడియో జనరేషన్</h1>
+  <h2>మీ జెమిని API కీ</h2>
+  <p>దయచేసి కొనసాగించడానికి మీ జెమిని API కీని నమోదు చేయండి. <a href="https://aistudio.google.com/app/apikey" target="_blank">ఇక్కడ ఒక కీని పొందండి</a>.</p>
+  <input type="password" id="api-key-input" placeholder="మీ API కీని ఇక్కడ అతికించండి">
+  <div class="api-key-buttons">
+    <button id="save-api-key-button">సేవ్ చేయండి</button>
+    <button id="clear-api-key-button">కీని తీసివేయండి</button>
+  </div>
+  <p id="api-key-error" style="display: none;"></p>
+</div>
+
+<div class="main-container">
+  <div class="input-column">
+    <h2>ఇన్‌పుట్‌లు</h2>
+    <p>ప్రాంప్ట్‌ను నమోదు చేయండి (అవసరం).</p>
+    <p><textarea id="prompt-input" type="text" placeholder="ఉదా., న్యూయార్క్ నగరంలో పరుగెడుతున్న టెడ్డీ బేర్"></textarea></p>
+    <p>వీడియో వ్యవధి (సెకన్లు):</p>
+    <p><input id="duration-input" type="number" value="5" min="1" /></p>
+    <p>యాస్పెక్ట్ రేషియో:</p>
+    <p>
+      <select id="aspect-ratio-input">
+        <option value="16:9">16:9 (ల్యాండ్‌స్కేప్)</option>
+        <option value="9:16">9:16 (పోర్ట్రెయిట్)</option>
+        <option value="1:1" selected>1:1 (చదరపు)</option>
+      </select>
+    </p>
+    <p>మూల చిత్రం (ఐచ్ఛికం):</p>
+    <label for="file-input" class="image-upload-label">
+        <img alt="చిత్రాన్ని అప్‌లోడ్ చేయడానికి క్లిక్ చేయండి" id="img" />
+        <span id="upload-placeholder-text">చిత్రాన్ని అప్‌లోడ్ చేయడానికి క్లిక్ చేయండి</span>
+        <button id="remove-image-button" class="remove-image-button" style="display: none;" title="చిత్రాన్ని తీసివేయండి">X</button>
+    </label>
+    <input id="file-input" type="file" accept="image/*" style="display: none;" />
+    <p id="image-upload-error" style="display: none;"></p>
+    
+    <h4>శీర్షికలు (ఐచ్ఛికం):</h4>
+    <div id="captions-container"></div>
+    <button id="add-caption-button">+ శీర్షికను జోడించండి</button>
+
+    <button id="generate-button">జనరేట్ చేయండి</button>
+    <p id="status">సిద్ధంగా ఉంది.</p>
+  </div>
+  <div class="output-column">
+    <h2>అవుట్‌పుట్</h2>
+    <div id="loader" class="loader-container">
+      <div class="spinner"></div>
+      <p id="progress-text">వీడియో జనరేట్ అవుతోంది...</p>
+      <progress id="progress-bar" max="100" value="0"></progress>
+    </div>
+    <div id="video-container" style="display: none;">
+        <video id="video" controls loop>
+          <track kind="captions" srclang="en" label="English" />
+        </video>
+        <div class="video-controls">
+          <input type="checkbox" id="loop-toggle" checked />
+          <label for="loop-toggle">వీడియోను లూప్ చేయండి</label>
+        </div>
+        <button id="download-button">వీడియోను డౌన్‌లోడ్ చేయండి</button>
+        <div id="trim-controls" style="display: none;">
+          <h4>వీడియోను ట్రిమ్ చేయండి</h4>
+          <div class="trim-inputs">
+            <label for="trim-start">ప్రారంభం (సె):</label>
+            <input type="number" id="trim-start" min="0" step="0.1" value="0">
+            <label for="trim-end">ముగింపు (సె):</label>
+            <input type="number" id="trim-end" min="0" step="0.1" value="0">
+          </div>
+          <button id="trim-button">ట్రిమ్ చేసి డౌన్‌లోడ్ చేయండి</button>
+          <p id="trim-status"></p>
+        </div>
+    </div>
+    <div id="api-error" style="display: none;">
+      <p>API కీతో సమస్య ఉంది. దయచేసి దాన్ని తనిఖీ చేసి, మళ్లీ సేవ్ చేయడానికి ప్రయత్నించండి.</p>
+    </div>
+  </div>
+</div><link rel="stylesheet" href="/index.css">
+<script type="module" src="/index.tsx"></script>
